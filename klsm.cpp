@@ -3,14 +3,12 @@
 using namespace std;
 
 struct Item {
-public:
 	int key;
 	char c;
 	bool logical_deleted;
 };
 
 struct Block {
-public:
 	int filled;
 	int level;
 
@@ -57,6 +55,48 @@ public:
 
 		filled = f;
 		return this;
+	}
+};
+
+struct BlockArray {
+	vector<Block*> blocks;
+	vector<int> k_pivots;
+	int size;
+
+	void insert(Block* block);
+	bool consolidate();
+	void calculate_pivots();
+	BlockArray* copy();
+
+	Item* find_min() {
+
+		srand(69);
+		int total = 0;
+
+		for(int i = 0; i < size; ++i) {
+			total += blocks[i]->filled - k_pivots[i];
+		}
+
+		int r = rand() % (total);
+
+		for(int i = 0; i < size; ++i) {
+
+			int range = blocks[i]->filled - k_pivots[i];
+			if(range <= r) {
+				r -= range;
+			}
+			else {
+				if(r != range - 1) {
+					Item* item = blocks[i]->items[k_pivots[i] + r];
+					if(!(item->logical_deleted)) {
+						return item;
+					}
+				}
+				return blocks[i]->items[blocks[i]->filled - 1];
+			}
+
+		}
+
 	}
 };
 

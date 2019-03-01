@@ -17,7 +17,7 @@ struct Block {
 	Block(int l) {
 		filled = 0;
 		level = l;
-		vector<Item*> item;
+		vector<Item*> items;
 	}
 
 	void append(Item* item) {
@@ -98,6 +98,11 @@ struct BlockArray {
 		}
 
 	}
+
+	void insert(Block *block) {
+		blocks.push_back(block);
+	}
+
 };
 
 int main() {

@@ -12,7 +12,6 @@ public:
 	vector<Node*> nextPointers;
 
 	Node(int height) {
-		this->nextPointers.push_back(nullptr);
 		this->height = height;
 		for(int i = 0; i < height; i++) {
 			(this->nextPointers).push_back(nullptr);
@@ -52,7 +51,7 @@ public:
 	}
 
 	void maybeGrow() {
-
+		srand(time(NULL));
 		double prob = 50;
 		int chance = rand() % 100 + 1;
 		if(chance < prob) {
@@ -109,7 +108,7 @@ public:
 	}
 
 	int generateRandomHeight(int maxHeight) {
-
+		srand(time(NULL));
 		int level = 1;
 		double prob = 50.0;
 
@@ -128,7 +127,7 @@ public:
 		Node* curr = (this->getHead())->getNext(this->height);
 
 		if(curr == NULL) {
-			(this->head)->grow();
+			(this->getHead())->grow();
 			this->height++;
 			return;
 		}
@@ -315,9 +314,8 @@ public:
 	}
 
 	void print() {
-
         ofstream myfile;
-        myfile.open("outputCPP.txt");
+        myfile.open("output.txt");
 
         int curr_level = head->height;
 
@@ -334,23 +332,242 @@ public:
         myfile.close();
     }
 
-    void printHeight() {
-    	cout << "height: " << this->getHeight() << endl;
-    }
+};
+
+struct RNG {
+public:
+	int maxRandomValue;
+	unordered_set<int> usedIntegers;
+
+	RNG() {
+		this->maxRandomValue = INT_MAX;
+	}
+
+	int getUniqueRandomInteger() {
+
+		srand(time(NULL));
+
+		if((this->usedIntegers).size() == maxRandomValue) {
+			cout << "too many random integers generated" << endl;
+			exit(0);
+		}
+
+		int r = (int)(rand() % this->maxRandomValue + 1);
+
+		while((this->usedIntegers).count(r) != 0)
+			r = (int)(rand() % this->maxRandomValue + 1);
+
+		(this->usedIntegers).insert(r);
+		return r;
+	}
+
+	void setMaxRandomValue(int max) {
+		this->maxRandomValue = max;
+	}
+
+	void clear() {
+		(this->usedIntegers).clear();
+	}
+
+	int getRandomUsedInteger() {
+
+		srand(time(NULL));
+
+		if((this->usedIntegers).size() == 0) {
+			return -1;
+		}
+
+		int i = 0; 
+		int index = (int)(rand() % (this->usedIntegers).size());
+
+		for(auto used : this->usedIntegers) {
+			if(i == index) {
+				return used;
+			}
+
+			++i;
+
+			return -1;
+		}
+
+		return -1;
+	}
+
+	int getRandomUnusedInteger() {
+		srand(time(NULL));
+
+		int r = (int)(rand() % this->maxRandomValue + 1);
+
+		while((this->usedIntegers).count(r) != 0) {
+			r = (int)(rand() % this->maxRandomValue + 1);
+		}
+
+		return r;
+	}
 
 };
 
+bool referenceCheck(SkipList* s, int level, vector<int> values) {
+	Node *temp = s->getHead();
 
-int main() {
+	for(int i = 0; i < values.size(); i++) {
+		temp = temp->getNext(level);
+		if(temp->getValue() != values[i]) {
+			return false;
+		}
+	}
 
-	srand(time(NULL));
+	if(temp->getNext(level) == NULL) {
+		cout << "Reference check: PASS" << endl;
+		return true;
+	}
 
+	cout << "Reference check: fail whale :(" << endl;
+	return false;
+} 
+
+void checkList(SkipList* s, int expectedSize, int expectedHeight) {
+	if(s->getSize() != expectedSize || s->getHeight() != expectedHeight) {
+		cout << "fail whale :(" << endl;
+		exit(1);
+	}
+	else {
+		// cout << "PASS!" << endl;
+	}
+}
+
+bool testCase01() {
+	SkipList *s = new SkipList(3);
+
+	s->insert(10, 1);
+	s->insert(20, 1);
+	s->insert(3, 2);
+	s->insert(15, 1);
+	s->insert(5, 1);
+
+	int level;
+	bool success = true;
+
+	success &= referenceCheck(s, 0, {3, 5, 10, 15, 20});
+	success &= referenceCheck(s, 1, {3});
+	success &= referenceCheck(s, 2, {});
+	success &= referenceCheck(s, 20, {});
+
+	return success;
+}
+
+bool testCase02() {
 	SkipList *s = new SkipList();
 
-	for(int i = 0; i < 10000000; i++) {
+	s->insert(10);
+	s->insert(20);
+	s->insert(3);
+	s->insert(15);
+	s->insert(5);
+
+	int level;
+	bool success = true;
+
+	success &= referenceCheck(s, 0, {3, 5, 10, 15, 20});
+	success &= referenceCheck(s, 4, {});
+	success &= (s->getSize() == 5);
+	success &= (s->getHeight() == 3);
+
+	return success;
+}
+
+bool testCase03() {
+
+	RNG* rng = new RNG();
+
+	int size, height, initHeight = 3;
+
+	SkipList *skiplist = new SkipList(initHeight);
+	checkList(skiplist, 0, 3);
+
+	vector<int> powers = {0, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
+
+	for(int i = 0; i < powers.size() -1; i++) {
+		for(size = powers[i] + 1; size <= powers[i+1]; size++) {
+			skiplist->insert(rng->getUniqueRandomInteger());
+			checkList(skiplist, size, max(initHeight, i + 1));
+		}
+	}
+
+	cout << "Hooray!" << endl;
+	return true;
+}
+
+bool testCase04() {
+	RNG *rng = new RNG();
+
+	for(int i = 0; i < 10; i++) {
+		rng->clear();
+		int numElements = 1000;
+
+		SkipList *skiplist = new SkipList();
+		for(int j = 0; j < numElements; j++) {
+			skiplist->insert(rng->getUniqueRandomInteger());
+		}
+
+		Node* temp = (skiplist->getHead())->getNext(1);
+
+		int count = 0;
+
+		while(temp != nullptr) {
+			count++;
+			temp = temp->getNext(1);
+		}
+
+		if(abs(numElements / 2 - count) <= 10) {
+			cout << "Hooray!" << endl;
+			return true;
+		}
+	}
+
+	cout << "fail whale :(" << endl;
+	return false;
+}
+
+bool testCase05() {
+	RNG *rng = new RNG();
+
+	int size, height;
+	SkipList* skiplist = new SkipList(5);
+
+	// Insert three random values into the skip list.
+	skiplist->insert(rng->getUniqueRandomInteger());
+	checkList(skiplist, 1, 5);
+
+	skiplist->insert(rng->getUniqueRandomInteger());
+	checkList(skiplist, 2, 5);
+
+	skiplist->insert(rng->getUniqueRandomInteger());
+	checkList(skiplist, 3, 5);
+
+	// Now delete one of those values at random.
+	skiplist->sldelete(rng->getRandomUsedInteger());
+	checkList(skiplist, 2, 1);
+	cout << "Hooray!" << endl;
+
+	return true;
+}
+
+int main() {
+	// cout << testCase01() << endl;
+	// cout << testCase02() << endl;
+	// cout << testCase03() << endl;
+	// cout << testCase04() << endl;
+	// cout << testCase05() << endl;
+	SkipList *s = new SkipList();
+
+	for(int i = 0; i < 100000; i++) {
 		s->insert(i);
 	}
 
-	// s->print();
-	s->printHeight();
+	s->print();
+
+	return 0;
+
+
 }

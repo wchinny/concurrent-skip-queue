@@ -312,12 +312,39 @@ public class SkipList<T extends Comparable<T>> {
 		this.height--;
 	}
 
+	public void print() {
+        int curr_level = this.head.height();
+        for(int i = curr_level - 1; i >= 0; i--) {
+            Node<T> curr = this.head;
+            while(curr != null) {
+                System.out.print(((curr.value() == null) ? "null" : curr.value()) + " -> ");
+                curr = curr.next(i);
+            }
+            System.out.println();
+        }
+        System.out.println("----");
+    }
+
 	private double lg(int a) {			// A base-2 logarithm function
 		return logb(a, 2);
 	} 
 
 	private double logb(double a, double b) {	// A logartihm base converter using a property of logarithms
 		return Math.log(a) / Math.log(b);
+	}
+
+	public static void main(String[] args) {
+
+		SkipList<Integer> s = new SkipList<>();
+
+		for(int i = 0; i < 100000; i++) {
+			s.insert(i);
+		}
+
+		s.print();
+
+		System.out.println(s.height());
+
 	}
 }
 

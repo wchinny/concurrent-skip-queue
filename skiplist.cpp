@@ -12,7 +12,6 @@ public:
 	vector<Node*> nextPointers;
 
 	Node(int height) {
-		this->nextPointers.push_back(nullptr);
 		this->height = height;
 		for(int i = 0; i < height; i++) {
 			(this->nextPointers).push_back(nullptr);
@@ -314,10 +313,17 @@ public:
 		return want;
 	}
 
-	void print() {
+	void print(int mode) {
 
         ofstream myfile;
-        myfile.open("outputCPP.txt");
+
+        if(mode == 0) {
+        	myfile.open("outputCPP.txt");
+        }
+        else if(mode == 1) {
+        	myfile.open("outputCPP.txt", ios_base::app);
+        }
+        
 
         int curr_level = head->height;
 
@@ -331,6 +337,7 @@ public:
             myfile << endl;
         }
         myfile << "----" << endl;
+       	myfile << "height: " << this->getHeight() << endl;
         myfile.close();
     }
 
@@ -347,10 +354,16 @@ int main() {
 
 	SkipList *s = new SkipList();
 
-	for(int i = 0; i < 10000000; i++) {
+	for(int i = 0; i < 100000; i++) {
 		s->insert(i);
 	}
 
-	// s->print();
-	s->printHeight();
+	s->print(0);
+
+	for(int i = 100000; i >= 10000; i--) {
+		s->sldelete(i);
+	}
+
+	s->print(1);
+
 }

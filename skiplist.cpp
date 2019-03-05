@@ -7,8 +7,11 @@ struct Node {
 
 public:
 
+	int priority;
 	int value;
 	int height;
+	bool marked;
+
 	vector<Node*> nextPointers;
 
 	Node(int height) {
@@ -18,9 +21,10 @@ public:
 		}
 	}
 
-	Node(int data, int height) {
+	Node(int data, int priority, int height) {
 		this->value = data;
 		this->height = height;
+		this->priority = priority;
 		for(int i = 0; i < height; i++) {
 			(this->nextPointers).push_back(nullptr);
 		}
@@ -28,6 +32,10 @@ public:
 
 	int getValue() {
 		return this->value;
+	}
+
+	int getPriority() {
+		return this->priority;
 	}
 
 	int getHeight() {
@@ -164,9 +172,9 @@ public:
 		this->height--;
 	}
 
-	void insert(int data, int height) {
+	void insert(int data, int priority, int height) {
 		Node* curr = this->head;
-		Node* temp = new Node(data, height);
+		Node* temp = new Node(data, priority, height);
 		vector<Node*> path;
 
 		this->size++;
@@ -179,10 +187,10 @@ public:
 			if(curr->getNext(i) == nullptr) {
 				path[i] = curr;
 			}
-			else if(data < (curr->getNext(i))->getValue()) {
+			else if(priority < (curr->getNext(i))->getPriority()) {
 				path[i] = curr;
 			}
-			else if(data == (curr->getNext(i)->getValue())) {
+			else if(priority == (curr->getNext(i)->getPriority())) {
 				path[i] = curr;
 			}
 			else {
@@ -197,7 +205,7 @@ public:
 		}
 	}
 
-	void insert(int data) {
+	void insert(int data, int priority) {
 		Node* curr;
 		int newsize = this->size + 1;
 
@@ -214,16 +222,15 @@ public:
 			growSkipList();
 		}
 
-		insert(data, randHeight);
+		insert(data, priority, randHeight);
 		return;
 
 	}
 
-	void sldelete(int data) {
+	void sldelete(int data, int priority) {
 		Node* curr = this->head;
 		Node* want = NULL;
 		vector<Node*> path;
-		Node* temp = new Node(data, this->height);
 
 		for(int i = 0; i < this->height; i++) {
 			path.push_back(nullptr);
@@ -245,6 +252,108 @@ public:
 				i++;
 			}
 		}
+
+		if(want == NULL) {
+			return;
+		}
+
+		for(int i = want->getHeight() - 1; i >= 0; i--) {
+			path[i]->setNext(i, want->getNext(i));
+		}
+
+		this->size--;
+
+		int newsize = this->size;
+		int log = (int)ceil((log2 (double(newsize))));
+
+		if(newsize == 1 || newsize == 0) {
+			log = 1;
+		}
+
+		while(log < this->height) {
+			trimSkipList();
+		}
+
+		return;
+	}
+
+	// void sldelete(int data, int priority) {
+	// 	Node* curr = this->head;
+	// 	Node* want = NULL;
+	// 	vector<Node*> path;
+
+	// 	for(int i = 0; i < this->height; i++) {
+	// 		path.push_back(nullptr);
+	// 	}
+
+	// 	for(int i = this->height - 1; i >= 0; i--) {
+	// 		if(curr->getNext(i) == NULL) {
+	// 			path[i] = curr;
+	// 		}
+	// 		else if(data < (curr->getNext(i))->getValue()) {
+	// 			path[i] = curr;
+	// 		}
+	// 		else if(data == curr->getNext(i)->getValue()) {
+	// 			path[i] = curr;
+	// 			want = curr->getNext(i);
+	// 		}
+	// 		else {
+	// 			curr = curr->getNext(i);
+	// 			i++;
+	// 		}
+	// 	}
+
+	// 	if(want == NULL) {
+	// 		return;
+	// 	}
+
+	// 	for(int i = want->getHeight() - 1; i >= 0; i--) {
+	// 		path[i]->setNext(i, want->getNext(i));
+	// 	}
+
+	// 	this->size--;
+
+	// 	int newsize = this->size;
+	// 	int log = (int)ceil((log2 (double(newsize))));
+
+	// 	if(newsize == 1 || newsize == 0) {
+	// 		log = 1;
+	// 	}
+
+	// 	while(log < this->height) {
+	// 		trimSkipList();
+	// 	}
+
+	// 	return;
+	// }
+
+	void delete_min() {
+		Node* curr = this->head;
+		Node* want = NULL;
+		vector<Node*> path;
+
+		for(int i = 0; i < this->height; i++) {
+			path.push_back(nullptr);
+		}
+
+		for(int i = this->height - 1; i >= 0; i--) {
+			if(curr->getNext(i) == NULL) {
+				path[i] = curr;
+			}
+			else if(data < (curr->getNext(i))->getValue()) {
+				path[i] = curr;
+			}
+			else if(data == curr->getNext(i)->getValue()) {
+				path[i] = curr;
+				want = curr->getNext(i);
+			}
+			else {
+				curr = curr->getNext(i);
+				i++;
+			}
+		}
+
+		want = curr->getHead()->getNext(0);
 
 		if(want == NULL) {
 			return;
@@ -331,7 +440,7 @@ public:
             Node *curr = head->getNext(i);
 
             while(curr != NULL) {
-                ((curr == NULL) ? myfile << "NULL" : myfile << curr->getValue()) << " -> ";
+                ((curr == NULL) ? myfile << "NULL" : myfile << "[" << curr->getPriority() << ", " << curr->getValue()) << "]" << " -> ";
                 curr = curr->getNext(i);
             }
             myfile << endl;
@@ -354,15 +463,13 @@ int main() {
 
 	SkipList *s = new SkipList();
 
-	for(int i = 0; i < 100000; i++) {
-		s->insert(i);
+	for(int i = 1; i <= 100; i++) {
+		s->insert(123124, i);
 	}
 
 	s->print(0);
 
-	for(int i = 100000; i >= 10000; i--) {
-		s->sldelete(i);
-	}
+	s->delete_min();
 
 	s->print(1);
 

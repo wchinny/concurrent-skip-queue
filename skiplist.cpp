@@ -328,6 +328,7 @@ public:
 	// }
 
 	void delete_min() {
+
 		Node* curr = this->head;
 		Node* want = NULL;
 		vector<Node*> path;
@@ -336,28 +337,13 @@ public:
 			path.push_back(nullptr);
 		}
 
+		int top_priority = INT_MAX;
+
 		for(int i = this->height - 1; i >= 0; i--) {
-			if(curr->getNext(i) == NULL) {
-				path[i] = curr;
-			}
-			else if(data < (curr->getNext(i))->getValue()) {
-				path[i] = curr;
-			}
-			else if(data == curr->getNext(i)->getValue()) {
-				path[i] = curr;
-				want = curr->getNext(i);
-			}
-			else {
-				curr = curr->getNext(i);
-				i++;
-			}
+			path[i] = curr;
 		}
 
-		want = curr->getHead()->getNext(0);
-
-		if(want == NULL) {
-			return;
-		}
+		want = this->head->getNext(0);
 
 		for(int i = want->getHeight() - 1; i >= 0; i--) {
 			path[i]->setNext(i, want->getNext(i));
@@ -378,6 +364,7 @@ public:
 
 		return;
 	}
+
 
 	bool contains(int data) {
 		Node* curr = this->head;
@@ -463,13 +450,16 @@ int main() {
 
 	SkipList *s = new SkipList();
 
-	for(int i = 1; i <= 100; i++) {
+	for(int i = 1; i <= 50; i++) {
 		s->insert(123124, i);
 	}
 
 	s->print(0);
 
-	s->delete_min();
+
+	for(int i = 0; i <= 40; i++) {
+		s->delete_min();
+	}
 
 	s->print(1);
 

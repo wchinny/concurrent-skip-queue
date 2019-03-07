@@ -12,6 +12,13 @@ Here are the contents of the root folder:
 └── skiplist.cpp
 ```
 
+File information:
+
+- README.md -> Readme
+- skiplist.cpp -> Main part of this sprint, compile using instructions below.
+- skiplist-testing.cpp -> Testing for the skiplist. A separate unit testing is in progress.
+- klsm.cpp -> Extracted psudocod from the research paper, translated to C++. More work to be done on that part.
+
 ### Compiling and running the program 
 
 To compile, use the g++ compiler as shown here:

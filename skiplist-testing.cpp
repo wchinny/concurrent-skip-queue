@@ -7,8 +7,11 @@ struct Node {
 
 public:
 
+	int priority;
 	int value;
 	int height;
+	bool marked;
+
 	vector<Node*> nextPointers;
 
 	Node(int height) {
@@ -18,9 +21,10 @@ public:
 		}
 	}
 
-	Node(int data, int height) {
+	Node(int data, int priority, int height) {
 		this->value = data;
 		this->height = height;
+		this->priority = priority;
 		for(int i = 0; i < height; i++) {
 			(this->nextPointers).push_back(nullptr);
 		}
@@ -28,6 +32,10 @@ public:
 
 	int getValue() {
 		return this->value;
+	}
+
+	int getPriority() {
+		return this->priority;
 	}
 
 	int getHeight() {
@@ -51,7 +59,7 @@ public:
 	}
 
 	void maybeGrow() {
-		srand(time(NULL));
+
 		double prob = 50;
 		int chance = rand() % 100 + 1;
 		if(chance < prob) {
@@ -108,7 +116,7 @@ public:
 	}
 
 	int generateRandomHeight(int maxHeight) {
-		srand(time(NULL));
+
 		int level = 1;
 		double prob = 50.0;
 
@@ -127,7 +135,7 @@ public:
 		Node* curr = (this->getHead())->getNext(this->height);
 
 		if(curr == NULL) {
-			(this->getHead())->grow();
+			(this->head)->grow();
 			this->height++;
 			return;
 		}
@@ -164,9 +172,9 @@ public:
 		this->height--;
 	}
 
-	void insert(int data, int height) {
+	void insert(int data, int priority, int height) {
 		Node* curr = this->head;
-		Node* temp = new Node(data, height);
+		Node* temp = new Node(data, priority, height);
 		vector<Node*> path;
 
 		this->size++;
@@ -179,10 +187,10 @@ public:
 			if(curr->getNext(i) == nullptr) {
 				path[i] = curr;
 			}
-			else if(data < (curr->getNext(i))->getValue()) {
+			else if(priority < (curr->getNext(i))->getPriority()) {
 				path[i] = curr;
 			}
-			else if(data == (curr->getNext(i)->getValue())) {
+			else if(priority == (curr->getNext(i)->getPriority())) {
 				path[i] = curr;
 			}
 			else {
@@ -197,7 +205,7 @@ public:
 		}
 	}
 
-	void insert(int data) {
+	void insert(int data, int priority) {
 		Node* curr;
 		int newsize = this->size + 1;
 
@@ -214,16 +222,15 @@ public:
 			growSkipList();
 		}
 
-		insert(data, randHeight);
+		insert(data, priority, randHeight);
 		return;
 
 	}
 
-	void sldelete(int data) {
+	void sldelete(int data, int priority) {
 		Node* curr = this->head;
 		Node* want = NULL;
 		vector<Node*> path;
-		Node* temp = new Node(data, this->height);
 
 		for(int i = 0; i < this->height; i++) {
 			path.push_back(nullptr);
@@ -270,6 +277,45 @@ public:
 		return;
 	}
 
+	void delete_min() {
+
+		Node* curr = this->head;
+		Node* want = NULL;
+		vector<Node*> path;
+
+		for(int i = 0; i < this->height; i++) {
+			path.push_back(nullptr);
+		}
+
+		int top_priority = INT_MAX;
+
+		for(int i = this->height - 1; i >= 0; i--) {
+			path[i] = curr;
+		}
+
+		want = this->head->getNext(0);
+
+		for(int i = want->getHeight() - 1; i >= 0; i--) {
+			path[i]->setNext(i, want->getNext(i));
+		}
+
+		this->size--;
+
+		int newsize = this->size;
+		int log = (int)ceil((log2 (double(newsize))));
+
+		if(newsize == 1 || newsize == 0) {
+			log = 1;
+		}
+
+		while(log < this->height) {
+			trimSkipList();
+		}
+
+		return;
+	}
+
+
 	bool contains(int data) {
 		Node* curr = this->head;
 		Node* want = NULL;
@@ -313,9 +359,17 @@ public:
 		return want;
 	}
 
-	void print() {
+	void print(int mode) {
+
         ofstream myfile;
-        myfile.open("output.txt");
+
+        if(mode == 0) {
+        	myfile.open("outputCPP.txt");
+        }
+        else if(mode == 1) {
+        	myfile.open("outputCPP.txt", ios_base::app);
+        }
+        
 
         int curr_level = head->height;
 
@@ -323,13 +377,18 @@ public:
             Node *curr = head->getNext(i);
 
             while(curr != NULL) {
-                ((curr == NULL) ? myfile << "NULL" : myfile << curr->getValue()) << " -> ";
+                ((curr == NULL) ? myfile << "NULL" : myfile << "[" << curr->getPriority() << ", " << curr->getValue()) << "]" << " -> ";
                 curr = curr->getNext(i);
             }
             myfile << endl;
         }
         myfile << "----" << endl;
+       	myfile << "height: " << this->getHeight() << endl;
         myfile.close();
+    }
+
+    void printHeight() {
+    	cout << "height: " << this->getHeight() << endl;
     }
 
 };
@@ -407,28 +466,9 @@ public:
 
 };
 
-bool referenceCheck(SkipList* s, int level, vector<int> values) {
-	Node *temp = s->getHead();
-
-	for(int i = 0; i < values.size(); i++) {
-		temp = temp->getNext(level);
-		if(temp->getValue() != values[i]) {
-			return false;
-		}
-	}
-
-	if(temp->getNext(level) == NULL) {
-		cout << "Reference check: PASS" << endl;
-		return true;
-	}
-
-	cout << "Reference check: fail whale :(" << endl;
-	return false;
-} 
-
 void checkList(SkipList* s, int expectedSize, int expectedHeight) {
 	if(s->getSize() != expectedSize || s->getHeight() != expectedHeight) {
-		cout << "fail whale :(" << endl;
+		cout << "Check failed!" << endl;
 		exit(1);
 	}
 	else {
@@ -437,46 +477,32 @@ void checkList(SkipList* s, int expectedSize, int expectedHeight) {
 }
 
 bool testCase01() {
-	SkipList *s = new SkipList(3);
+	SkipList *s = new SkipList();
 
-	s->insert(10, 1);
-	s->insert(20, 1);
-	s->insert(3, 2);
-	s->insert(15, 1);
-	s->insert(5, 1);
+	s->insert(97, 10);
+	s->insert(55, 20);
+	s->insert(71, 3);
+	s->insert(41, 15);
+	s->insert(109, 5);
 
 	int level;
 	bool success = true;
 
-	success &= referenceCheck(s, 0, {3, 5, 10, 15, 20});
-	success &= referenceCheck(s, 1, {3});
-	success &= referenceCheck(s, 2, {});
-	success &= referenceCheck(s, 20, {});
+	s->print(0);
+
+	success &= (s->getSize() == 5);
+	success &= (s->getHeight() == 3);
+
+	if(success) {
+		cout << "Test Case 01: PASS!" << endl;
+	} else {
+		cout << "Test Case 01: FAIL!" << endl;
+	}
 
 	return success;
 }
 
 bool testCase02() {
-	SkipList *s = new SkipList();
-
-	s->insert(10);
-	s->insert(20);
-	s->insert(3);
-	s->insert(15);
-	s->insert(5);
-
-	int level;
-	bool success = true;
-
-	success &= referenceCheck(s, 0, {3, 5, 10, 15, 20});
-	success &= referenceCheck(s, 4, {});
-	success &= (s->getSize() == 5);
-	success &= (s->getHeight() == 3);
-
-	return success;
-}
-
-bool testCase03() {
 
 	RNG* rng = new RNG();
 
@@ -489,16 +515,16 @@ bool testCase03() {
 
 	for(int i = 0; i < powers.size() -1; i++) {
 		for(size = powers[i] + 1; size <= powers[i+1]; size++) {
-			skiplist->insert(rng->getUniqueRandomInteger());
+			skiplist->insert(rng->getUniqueRandomInteger(), rng->getUniqueRandomInteger());
 			checkList(skiplist, size, max(initHeight, i + 1));
 		}
 	}
 
-	cout << "Hooray!" << endl;
+	cout << "Test Case 02: PASS!" << endl;
 	return true;
 }
 
-bool testCase04() {
+bool testCase03() {
 	RNG *rng = new RNG();
 
 	for(int i = 0; i < 10; i++) {
@@ -507,7 +533,7 @@ bool testCase04() {
 
 		SkipList *skiplist = new SkipList();
 		for(int j = 0; j < numElements; j++) {
-			skiplist->insert(rng->getUniqueRandomInteger());
+			skiplist->insert(rng->getUniqueRandomInteger(), rng->getUniqueRandomInteger());
 		}
 
 		Node* temp = (skiplist->getHead())->getNext(1);
@@ -520,54 +546,43 @@ bool testCase04() {
 		}
 
 		if(abs(numElements / 2 - count) <= 10) {
-			cout << "Hooray!" << endl;
+			cout << "Test Case 03: PASS!" << endl;
 			return true;
 		}
 	}
 
-	cout << "fail whale :(" << endl;
+	cout << "Test Case 03: FAIL!" << endl;
 	return false;
 }
 
-bool testCase05() {
+bool testCase04() {
 	RNG *rng = new RNG();
 
 	int size, height;
 	SkipList* skiplist = new SkipList(5);
 
-	// Insert three random values into the skip list.
-	skiplist->insert(rng->getUniqueRandomInteger());
+	skiplist->insert(rng->getUniqueRandomInteger(), rng->getUniqueRandomInteger());
 	checkList(skiplist, 1, 5);
 
-	skiplist->insert(rng->getUniqueRandomInteger());
+	skiplist->insert(rng->getUniqueRandomInteger(), rng->getUniqueRandomInteger());
 	checkList(skiplist, 2, 5);
 
-	skiplist->insert(rng->getUniqueRandomInteger());
+	skiplist->insert(rng->getUniqueRandomInteger(), rng->getUniqueRandomInteger());
 	checkList(skiplist, 3, 5);
 
-	// Now delete one of those values at random.
-	skiplist->sldelete(rng->getRandomUsedInteger());
+	skiplist->delete_min();
 	checkList(skiplist, 2, 1);
-	cout << "Hooray!" << endl;
+
+	cout << "Test Case 04: PASS!" << endl;
 
 	return true;
 }
 
 int main() {
-	// cout << testCase01() << endl;
-	// cout << testCase02() << endl;
-	// cout << testCase03() << endl;
-	// cout << testCase04() << endl;
-	// cout << testCase05() << endl;
-	SkipList *s = new SkipList();
 
-	for(int i = 0; i < 100000; i++) {
-		s->insert(i);
-	}
-
-	s->print();
-
-	return 0;
-
+	testCase01();
+	testCase02();
+	testCase03();
+	testCase04();
 
 }

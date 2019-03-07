@@ -1,3 +1,0 @@
-Reference check: PASS
-Reference check: PASS
-Hooray!

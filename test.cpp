@@ -327,7 +327,7 @@ public:
 	// 	return;
 	// }
 
-	void delete_min() {
+	int delete_min() {
 
 		Node* curr = this->head;
 		Node* want = NULL;
@@ -344,6 +344,8 @@ public:
 		}
 
 		want = this->head->getNext(0);
+
+		int temp = want->value;
 
 		for(int i = want->getHeight() - 1; i >= 0; i--) {
 			path[i]->setNext(i, want->getNext(i));
@@ -362,7 +364,7 @@ public:
 			trimSkipList();
 		}
 
-		return;
+		return temp;
 	}
 
 
@@ -443,32 +445,202 @@ public:
 
 };
 
+// A BTree node 
+class BTreeNode { 
+	int *keys;
+	int t;	
+	BTreeNode **C; 
+	int n;	
+	bool leaf; 
+public: 
+	BTreeNode(int _t, bool _leaf); 
+
+	void insertNonFull(int k); 
+	void splitChild(int i, BTreeNode *y); 
+	void traverse(); 
+
+	BTreeNode *search(int k);  
+
+friend class BTree; 
+}; 
+
+class BTree { 
+	BTreeNode *root; 
+	int t;
+public: 
+	BTree(int _t) 
+	{ root = NULL; t = _t; } 
+
+	void traverse() 
+	{ if (root != NULL) root->traverse(); } 
+
+	BTreeNode* search(int k) 
+	{ return (root == NULL)? NULL : root->search(k); } 
+
+	void insert(int k); 
+}; 
+
+BTreeNode::BTreeNode(int t1, bool leaf1) { 
+	t = t1; 
+	leaf = leaf1; 
+
+	keys = new int[2*t-1]; 
+	C = new BTreeNode *[2*t]; 
+
+	n = 0; 
+} 
+
+void BTreeNode::traverse() 
+{ 
+    // There are n keys and n+1 children, travers through n keys 
+    // and first n children 
+    int i; 
+    for (i = 0; i < n; i++) 
+    { 
+        // If this is not leaf, then before printing key[i], 
+        // traverse the subtree rooted with child C[i]. 
+        if (leaf == false) 
+            C[i]->traverse(); 
+        cout << " " << keys[i]; 
+    } 
+  
+    // Print the subtree rooted with last child 
+    if (leaf == false) 
+        C[i]->traverse(); 
+} 
+
+BTreeNode *BTreeNode::search(int k) { 
+	int i = 0; 
+	while (i < n && k > keys[i]) 
+		i++; 
+
+	if (keys[i] == k) 
+		return this; 
+
+	if (leaf == true) 
+		return NULL; 
+
+	return C[i]->search(k); 
+} 
+
+void BTree::insert(int k) { 
+
+	if (root == NULL) { 
+		root = new BTreeNode(t, true); 
+		root->keys[0] = k; 
+		root->n = 1; 
+	} 
+	else { 
+		if (root->n == 2 * t - 1) { 
+			BTreeNode *s = new BTreeNode(t, false); 
+
+			s->C[0] = root; 
+
+			s->splitChild(0, root); 
+
+			int i = 0; 
+			if (s->keys[0] < k) 
+				i++; 
+			s->C[i]->insertNonFull(k); 
+
+			root = s; 
+		} 
+		else 
+			root->insertNonFull(k); 
+	} 
+} 
+
+void BTreeNode::insertNonFull(int k) { 
+
+	int i = n - 1; 
+
+	if (leaf == true) { 
+
+		while (i >= 0 && keys[i] > k) { 
+			keys[i + 1] = keys[i]; 
+			i--; 
+		} 
+
+		keys[i + 1] = k; 
+		n = n + 1; 
+	} 
+	else { 
+		while (i >= 0 && keys[i] > k) 
+			i--; 
+
+		if (C[i+1]->n == 2 * t - 1) { 
+			splitChild(i + 1, C[i + 1]); 
+
+			if (keys[i + 1] < k) 
+				i++; 
+		} 
+		C[i + 1]->insertNonFull(k); 
+	} 
+} 
+
+void BTreeNode::splitChild(int i, BTreeNode *y) { 
+
+	BTreeNode *z = new BTreeNode(y->t, y->leaf); 
+	z->n = t - 1; 
+
+	for (int j = 0; j < t-1; j++) 
+		z->keys[j] = y->keys[j+t]; 
+
+	if (y->leaf == false) { 
+		for (int j = 0; j < t; j++) 
+			z->C[j] = y->C[j + t]; 
+	} 
+
+	y->n = t - 1; 
+
+	for (int j = n; j >= i + 1; j--) 
+		C[j + 1] = C[j]; 
+
+	C[i + 1] = z; 
+
+	for (int j = n - 1; j >= i; j--) 
+		keys[j + 1] = keys[j]; 
+ 
+	keys[i] = y->keys[t - 1]; 
+
+	n = n + 1; 
+} 
+
 int main() {
 
 	srand(time(NULL));
 
 	SkipList *s = new SkipList();
+	BTree t(4096);
 
 	clock_t begin, end;
 
 	begin = clock();
 
-	for(int i = 1; i <= 1000000; i++) {
-		s->insert(123124, i);
-		if(s->getHeight() >= 14) {
+	int numInserts = 1000000;
+
+	for(int i = 1; i <= numInserts; i++) {
+		s->insert(i+1, i);
+		if(s->getHeight() >= (int)ceil((log2 (double(numInserts)))) - 3) {
 			// cout << "height: " << s->getHeight() << endl;
 			while(true) {
-				s->delete_min();
-				if(s->height == 12) {
+				// cout << "asdasd" << endl;
+				t.insert(s->delete_min()); // throw it into b-tree
+				if(s->height == (int)ceil((log2 (double(numInserts)))) - 5) {
 					break;
 				}
 			}
 		}
 	}
 
+	s->print(0);
+
+
 	end = clock();
 
 	double elapsed_secs = (double(end - begin) / CLOCKS_PER_SEC);
+
+	t.traverse(); 
 
 	// int height1 = s->getHeight();
 

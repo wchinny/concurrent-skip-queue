@@ -1,42 +1,8 @@
 // C++ program for B-Tree insertion 
 #include<iostream> 
 #include <ctime>
+#include "BTree.h"
 using namespace std; 
-
-// A BTree node 
-class BTreeNode { 
-	int *keys;
-	int t;	
-	BTreeNode **C; 
-	int n;	
-	bool leaf; 
-public: 
-	BTreeNode(int _t, bool _leaf); 
-
-	void insertNonFull(int k); 
-	void splitChild(int i, BTreeNode *y); 
-	void traverse(); 
-
-	BTreeNode *search(int k);  
-
-friend class BTree; 
-}; 
-
-class BTree { 
-	BTreeNode *root; 
-	int t;
-public: 
-	BTree(int _t) 
-	{ root = NULL; t = _t; } 
-
-	void traverse() 
-	{ if (root != NULL) root->traverse(); } 
-
-	BTreeNode* search(int k) 
-	{ return (root == NULL)? NULL : root->search(k); } 
-
-	void insert(int k); 
-}; 
 
 BTreeNode::BTreeNode(int t1, bool leaf1) { 
 	t = t1; 
@@ -53,7 +19,10 @@ void BTreeNode::traverse() {
 	int i; 
 	for (i = 0; i < n; i++) { 
 		if (leaf == false) 
-			C[i]->traverse(); 
+			C[i]->traverse();
+
+		cout << " " << keys[i]; 
+ 
 	} 
 
 	if (leaf == false) 
@@ -157,43 +126,34 @@ void BTreeNode::splitChild(int i, BTreeNode *y) {
 	n = n + 1; 
 } 
 
-int main() { 
+// int main() { 
 
-	BTree t(4096); // A B-Tree with minimum degree 3 
+// 	BTree t(4096); 
 
-	for(int i = 0; i < 1000000; i++) {
-		t.insert(i);
-	}
+// 	for(int i = 0; i < 1000000; i++) {
+// 		t.insert(i);
+// 	}
 
-	// cout << "Traversal of the constucted tree is "; 
+// 	clock_t begin = clock();
 
-	clock_t begin = clock();
+// 	t.traverse(); 
 
-	t.traverse(); 
+// 	clock_t end = clock();
 
-	clock_t end = clock();
+// 	double elapsed_secs = (double(end - begin) / CLOCKS_PER_SEC);
 
-	double elapsed_secs = (double(end - begin) / CLOCKS_PER_SEC);
+// 	cout << "traverse: " << elapsed_secs * 1000 << " ms" << endl;
 
-	cout << "traverse: " << elapsed_secs * 1000 << " ms" << endl;
+// 	begin = clock();
 
-	begin = clock();
+// 	t.search(918);
 
-	t.search(918);
+// 	end = clock();
 
-	end = clock();
+// 	elapsed_secs = (double(end - begin) / CLOCKS_PER_SEC);
 
-	elapsed_secs = (double(end - begin) / CLOCKS_PER_SEC);
+// 	cout << "search: " << elapsed_secs * 1000 << " ms" << endl;
 
-	cout << "search: " << elapsed_secs * 1000 << " ms" << endl;
-
-
-	// int k = 6; 
-	// (t.search(k) != NULL)? cout << "\nPresent" : cout << "\nNot Present\n"; 
-
-	// k = 15; 
-	// (t.search(k) != NULL)? cout << "\nPresent" : cout << "\nNot Present\n"; 
-
-	return 0; 
-} 
+// 	return 0; 
+// } 
 

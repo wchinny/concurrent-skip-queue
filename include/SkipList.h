@@ -1,6 +1,6 @@
 #ifndef __SKIPLIST_H
 #define __SKIPLIST_H
-
+#pragma once
 #include <bits/stdc++.h>
 using namespace std;
 

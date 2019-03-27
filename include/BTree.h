@@ -1,5 +1,6 @@
 #ifndef __BTREE_H
 #define __BTREE_H
+#pragma once
 
 class BTreeNode { 
 	int *keys;

@@ -4,22 +4,6 @@
 
 using namespace std;
 
-Node::Node(int height) {
-	this->height = height;
-	for(int i = 0; i < height; i++) {
-		(this->nextPointers).push_back(nullptr);
-	}
-}
-
-Node::Node(int data, int priority, int height) {
-	this->value = data;
-	this->height = height;
-	this->priority = priority;
-	for(int i = 0; i < height; i++) {
-		(this->nextPointers).push_back(nullptr);
-	}
-}
-
 int Node::getValue() {
 	return this->value;
 }
@@ -175,7 +159,7 @@ void SkipList::insert(int data, int priority, int height) {
 }
 
 void SkipList::insert(int data, int priority) {
-	Node* curr;
+
 	int newsize = this->size + 1;
 
 	if(this->size == 0) {
@@ -185,7 +169,6 @@ void SkipList::insert(int data, int priority) {
 	int log = (int)ceil((log2 (double(newsize))));
 	int maxHeight = max(log, this->height);
 	int randHeight = generateRandomHeight(maxHeight);
-	int newheight = this->height+1;
 
 	if(log > this->height) {
 		growSkipList();
@@ -256,8 +239,6 @@ void SkipList::delete_min() {
 		path.push_back(nullptr);
 	}
 
-	int top_priority = INT_MAX;
-
 	for(int i = this->height - 1; i >= 0; i--) {
 		path[i] = curr;
 	}
@@ -287,8 +268,7 @@ void SkipList::delete_min() {
 
 bool SkipList::contains(int data) {
 	Node* curr = this->head;
-	Node* want = NULL;
-
+	
 	for(int i = this->getHeight() - 1; i >= 0; i--) {
 		if(curr->getNext(i) == NULL) {
 

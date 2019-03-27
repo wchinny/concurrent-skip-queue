@@ -38,17 +38,3 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 clean:
 	$(RM) $(OBJ)
 
-# SOURCES = main.cpp SkipList.cpp BTree.cpp
-
-# work out names of object files from sources
-# OBJECTS = $(SOURCES:.cpp=.o)
-
-# CXX := /usr/local/bin/g++
-
-# all: ${TARGET}
-
-# clean:
-# 	rm ${OBJECTS} ${TARGET}
-
-# ${TARGET}: ${OBJECTS}
-# 	${LINK.cc} -o $@ $^

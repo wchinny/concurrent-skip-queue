@@ -11,7 +11,7 @@
 # target executable name
 EXE = klsm
 
-CXX := /usr/local/bin/g++
+CXX := /usr/local/bin/g++-8
 
 # source files
 

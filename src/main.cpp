@@ -29,6 +29,6 @@ int main() {
 		}
 	}
 
-	Btree.traverse();
+	//Btree.traverse();
 	
 }

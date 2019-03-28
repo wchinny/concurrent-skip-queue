@@ -34,6 +34,9 @@
 # Java stuff
 *.class
 
+# DS_Store
+.DS_Store
+
 # Output
 outputCPP.txt
 outputJava.txt

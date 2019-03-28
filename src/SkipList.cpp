@@ -229,7 +229,7 @@ void SkipList::sldelete(int data, int priority) {
 	return;
 }
 
-void SkipList::delete_min() {
+Node* SkipList::delete_min() {
 
 	Node* curr = this->head;
 	Node* want = NULL;
@@ -262,7 +262,7 @@ void SkipList::delete_min() {
 		trimSkipList();
 	}
 
-	return;
+	return want;
 }
 
 
@@ -340,24 +340,5 @@ void SkipList::printHeight() {
 	cout << "height: " << this->getHeight() << endl;
 }
 
-
-// int main() {
-
-// 	SkipList *s = new SkipList();
-
-// 	for(int i = 1; i <= 1000000; i++) {
-// 		s->insert(123124, i);
-// 		if(s->getHeight() >= 14) {
-// 			// cout << "height: " << s->getHeight() << endl;
-// 			while(true) {
-// 				s->delete_min();
-// 				if(s->height == 12) {
-// 					break;
-// 				}
-// 			}
-// 		}
-// 	}
-
-// 	s->print(0);
 
 // }

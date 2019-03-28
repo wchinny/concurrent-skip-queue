@@ -126,34 +126,3 @@ void BTreeNode::splitChild(int i, BTreeNode *y) {
 	n = n + 1; 
 } 
 
-// int main() { 
-
-// 	BTree t(4096); 
-
-// 	for(int i = 0; i < 1000000; i++) {
-// 		t.insert(i);
-// 	}
-
-// 	clock_t begin = clock();
-
-// 	t.traverse(); 
-
-// 	clock_t end = clock();
-
-// 	double elapsed_secs = (double(end - begin) / CLOCKS_PER_SEC);
-
-// 	cout << "traverse: " << elapsed_secs * 1000 << " ms" << endl;
-
-// 	begin = clock();
-
-// 	t.search(918);
-
-// 	end = clock();
-
-// 	elapsed_secs = (double(end - begin) / CLOCKS_PER_SEC);
-
-// 	cout << "search: " << elapsed_secs * 1000 << " ms" << endl;
-
-// 	return 0; 
-// } 
-

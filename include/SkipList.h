@@ -70,7 +70,7 @@ public:
 	void insert(int data, int priority, int height);
 	void insert(int data, int priority);
 	void sldelete(int data, int priority);
-	void delete_min();
+	Node* delete_min();
 	bool contains(int data);
 	Node* get(int data);
 	void print(int mode);

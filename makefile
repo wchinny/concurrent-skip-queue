@@ -22,6 +22,7 @@ SRC = $(wildcard $(SRC_DIR)/*.cpp)
 OBJ = $(SRC:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
 
 CPPFLAGS += -Iinclude
+CPPFLAGS += -O
 CFLAGS += -Wall
 LDLIBS += -lm
 

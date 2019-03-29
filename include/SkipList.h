@@ -49,6 +49,8 @@ public:
 	Node* head;
 	int height; 
 	int size; 
+	vector<Node*> k_priorities;
+	int k;
 
 	SkipList(void) {
 		this->head = new Node(1);
@@ -56,11 +58,13 @@ public:
 		this->size = 0;
 	}
 
-	SkipList(int height) {
-		this->head = new Node(height);
-		this->height = height;
+	SkipList(int p, int t) {
+		k = (int)ceil(double(p) / t);
+		this->head = new Node(1);
+		this->height = 1;
 		this->size = 0;
 	}
+
 	int getSize();
 	int getHeight();
 	Node* getHead();
@@ -71,6 +75,7 @@ public:
 	void insert(int data, int priority);
 	void sldelete(int data, int priority);
 	Node* delete_min();
+	int delete_k_min(Node* head, int k);
 	bool contains(int data);
 	Node* get(int data);
 	void print(int mode);

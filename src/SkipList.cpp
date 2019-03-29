@@ -308,6 +308,24 @@ Node* SkipList::get(int data) {
 	return want;
 }
 
+int SkipList::delete_k_min(Node* head, int k) {
+
+	Node *curr = head->getNext(0);
+
+	int rnd = rand() % (k+1) + 1;
+
+ 	for(int i = 0; i < rnd; i++) {
+   		curr = curr->getNext(0);
+ 	}
+
+ 	int val = curr->getValue();
+
+ 	sldelete(curr->getValue(), curr->getPriority());
+
+ 	return val;
+
+}
+
 void SkipList::print(int mode) {
 
     ofstream myfile;
@@ -318,7 +336,6 @@ void SkipList::print(int mode) {
     else if(mode == 1) {
     	myfile.open("outputCPP.txt", ios_base::app);
     }
-    
 
     int curr_level = head->height;
 
@@ -331,6 +348,7 @@ void SkipList::print(int mode) {
         }
         myfile << endl;
     }
+
     myfile << "----" << endl;
    	myfile << "height: " << this->getHeight() << endl;
     myfile.close();

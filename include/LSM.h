@@ -19,6 +19,8 @@ public:
 	};
 
 	void insert(int data, int priority);
+	void traverse();
+	bool contains(int data);
 };
 
 

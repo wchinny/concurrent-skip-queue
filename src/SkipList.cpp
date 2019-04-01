@@ -344,13 +344,19 @@ void SkipList::print(int mode) {
 
         while(curr != NULL) {
             ((curr == NULL) ? myfile << "NULL" : myfile << "[" << curr->getPriority() << ", " << curr->getValue()) << "]" << " -> ";
+            ((curr == NULL) ? cout << "NULL" : cout << "[" << curr->getPriority() << ", " << curr->getValue()) << "]" << " -> ";
             curr = curr->getNext(i);
         }
+        cout << endl;
         myfile << endl;
     }
 
     myfile << "----" << endl;
    	myfile << "height: " << this->getHeight() << endl;
+
+   	cout << "----" << endl;
+   	cout << "height: " << this->getHeight() << endl;
+   	
     myfile.close();
 }
 

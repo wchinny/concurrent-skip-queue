@@ -9,24 +9,33 @@ Here are the contents of the root folder:
 ├── MidtermReport.pdf
 ├── README.md
 ├── README.pdf
+├── a.out
+├── compile.bat
 ├── example
 ├── include
 │   ├── BTree.h
-│   └── SkipList.h
+│   ├── BTree.h.gch
+│   ├── LSM.h
+│   ├── SkipList.h
+│   └── SkipList.h.gch
 ├── irrelevant
 │   └── klsm.cpp
 ├── klsm
 ├── makefile
 ├── obj
 │   ├── BTree.o
+│   ├── LSM.o
 │   ├── SkipList.o
 │   └── main.o
+├── outputCPP.txt
 ├── src
 │   ├── BTree.cpp
+│   ├── LSM.cpp
 │   ├── SkipList.cpp
 │   └── main.cpp
 └── testing
     └── skiplist-testing.cpp
+
 ```
 
 ### Compiling and running the program 

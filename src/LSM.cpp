@@ -20,3 +20,25 @@ void LSM::insert(int data, int priority) {
 		}
 	}
 }
+
+bool LSM::contains(int data) {
+	bool in_SkipList = s->contains(data);
+	bool in_BTree = false;
+
+	if(!in_SkipList) {
+		in_BTree = b->search(data);
+	}
+
+	return in_SkipList || in_BTree;
+}
+
+void LSM::traverse() {
+	cout << "Skiplist traversal" << endl;
+	for(int i = 0; i < 100; i++) {cout << "=";}
+	cout << endl;
+	s->print(0);
+	cout << "\nBTree traversal" << endl; 
+	for(int i = 0; i < 100; i++) {cout << "=";}
+	cout << endl;
+	b->traverse();
+}

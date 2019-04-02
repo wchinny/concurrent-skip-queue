@@ -42,3 +42,7 @@ void LSM::traverse() {
 	cout << endl;
 	b->traverse();
 }
+
+int LSM::delete_k_min() {	
+	return s->delete_k_min(s->head, s->k);
+}

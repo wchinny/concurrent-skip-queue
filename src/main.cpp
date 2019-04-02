@@ -13,10 +13,11 @@ int main() {
 
 	LSM *lsm_Tree = new LSM(num_inserts);
 
-
 	for(int i = 1; i <= num_inserts; i++) {
 		lsm_Tree->insert(i, i);
 	}
+
+	lsm_Tree->delete_k_min();
 
 	// cout << lsm_Tree->contains(10008) << endl;
 

@@ -24,8 +24,4 @@ int main() {
 
    lsm_Tree->traverse();
 
-   //lsm_Tree->delete_k_min();
-   //lsm_Tree->traverse();
-   //lsm_Tree->b->traverse();
-   //lsm_Tree->s->print(0);	
 }

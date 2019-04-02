@@ -21,7 +21,7 @@ public:
 	void insert(int data, int priority);
 	void traverse();
 	bool contains(int data);
-	int delete_k_min();
+	int delete_min();
 };
 
 #endif /*  __LSM_H*/

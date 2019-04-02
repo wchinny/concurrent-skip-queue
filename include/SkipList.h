@@ -30,6 +30,14 @@ public:
 		}
 	}
 
+	bool operator<(Node* other) {
+		return priority > other->priority;
+	}
+
+	bool operator>(Node* other) {
+		return priority < other->priority;
+	}
+
 	int getValue();
 	int getPriority();
 	int getHeight();

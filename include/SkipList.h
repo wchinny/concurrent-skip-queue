@@ -56,6 +56,7 @@ public:
 		this->head = new Node(1);
 		this->height = 1;
 		this->size = 0;
+		this->k = 2; //This is just the default!
 	}
 
 	SkipList(int p, int t) {

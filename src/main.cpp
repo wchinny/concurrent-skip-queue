@@ -7,26 +7,25 @@ using namespace std;
 
 int main() {
 
-	srand(time(NULL));
+	srand(time(0));
 
+	//Initialize our LSM with the following variables:
 	int num_inserts = 100;
+	int pRelaxation = 6;
+	int numThreads = 1;
 
-	LSM *lsm_Tree = new LSM(num_inserts);
+	LSM *lsm_Tree = new LSM(num_inserts,pRelaxation,numThreads);
 
 	for(int i = 1; i <= num_inserts; i++) {
 		lsm_Tree->insert(i, i);
 	}
 
-	lsm_Tree->delete_k_min();
+   //cout << lsm_Tree->contains(10008) << endl;
 
-	// cout << lsm_Tree->contains(10008) << endl;
+   lsm_Tree->traverse();
 
-	lsm_Tree->traverse();
-
-	// lsm_Tree->b->traverse();
-
-	// lsm_Tree->s->print(0);
-
-
-	
+   //lsm_Tree->delete_k_min();
+   //lsm_Tree->traverse();
+   //lsm_Tree->b->traverse();
+   //lsm_Tree->s->print(0);	
 }

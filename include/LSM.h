@@ -12,8 +12,8 @@ public:
 	BTree *b;
 	int numInserts;
 
-	LSM(int _numInserts) {
-		s = new SkipList();
+	LSM(int _numInserts, int pRelaxation, int numThreads) {
+		s = new SkipList(pRelaxation,numThreads);
 		b = new BTree(4096);
 		numInserts = _numInserts;
 	};
@@ -23,6 +23,5 @@ public:
 	bool contains(int data);
 	int delete_k_min();
 };
-
 
 #endif /*  __LSM_H*/

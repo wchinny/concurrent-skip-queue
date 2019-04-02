@@ -320,7 +320,7 @@ int SkipList::delete_k_min(Node* head, int k) {
 
  	int val = curr->getValue();
 
- 	sldelete(curr->getValue(), curr->getPriority());
+ 	sldelete(val, curr->getPriority());
 
  	return val;
 

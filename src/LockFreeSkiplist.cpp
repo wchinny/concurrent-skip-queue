@@ -5,7 +5,7 @@ int randomLevel(int _maxHeight) {
 	return selected;
 }
 
-bool SharedSkipList::add(int v) {
+bool SharedSkipList::add(int v, int threadID) {
 
 	int topLayer = randomLevel(MaxHeight);
 
@@ -59,7 +59,7 @@ bool SharedSkipList::add(int v) {
 			continue;
 		} 
 
-		SharedNode* newNode = new SharedNode(v, topLayer);
+		SharedNode* newNode = new SharedNode(v, topLayer, threadID);
 
 		for(int layer = 0; layer <= topLayer; layer++) 
 		{
@@ -195,8 +195,9 @@ void SharedSkipList::print() {
         SharedNode *curr = LSentinel->nexts[i];
 
         while(curr != NULL) {
-			if(curr->key != INT_MAX - 1)
-				myfile << curr->key << "->";
+			if(curr->key != INT_MAX - 1){
+				myfile << "[" << curr->key << "," << curr->threadID << "]" << "->";
+			}
 			else
 				myfile << "+∞" << "->";	//Updated with actual infinity symbol :)		
 
@@ -206,6 +207,15 @@ void SharedSkipList::print() {
     }
     myfile.close(); 
 
+}
+
+bool SharedSkipList::isEmpty() {
+
+	if(LSentinel->nexts[0]->key == INT_MAX - 1) {
+		return true;
+	}
+
+	return false;
 }
 
 // void batch_add(SkipList* s)

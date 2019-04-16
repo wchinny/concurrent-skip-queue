@@ -245,6 +245,10 @@ Node* SkipList::delete_min() {
 
 	want = this->head->getNext(0);
 
+	if(want == NULL) {
+		return NULL;
+	}
+
 	for(int i = want->getHeight() - 1; i >= 0; i--) {
 		path[i]->setNext(i, want->getNext(i));
 	}

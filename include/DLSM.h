@@ -26,32 +26,8 @@ public:
 		}
 	}
 
-	void ops(int idx) {
-
-		for(int i = 0; i < 10000; i++) {
-			this->skip_array[idx]->insert((int)(rand() % 10000 + 1), (int)(rand() % 10000 + 1));
-			// this->skip_array[idx]->insert(i,i);
-			// printf("%d\n", i);
-		}
-
-		cout << this->skip_array[idx]->getHeight() << endl;
-
-		Node *deletedNode;
-
-		if(skip_array[idx]->getHeight() >= log2(10000)) {
-
-			while(true) {
-
-				deletedNode = skip_array[idx]->delete_min();
-
-				shared->add(deletedNode->value);
-
-				if(skip_array[idx]->height <= log2(10000) - 3){
-					break;
-				}
-			}
-		}
-	}
+	void test_remove();
+	void ops(int idx, int flag);
 };
 
 #endif /* _DLSM_ */

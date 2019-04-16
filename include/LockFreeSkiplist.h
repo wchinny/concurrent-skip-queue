@@ -10,23 +10,33 @@ public:
 
 	int key;
 	int topLayer;
+	int threadID;
 	SharedNode** nexts;
 	bool marked;
 	bool fullyLinked;
 	mutex lock;
 
+
 	SharedNode(int _key, int _height) {
 		fullyLinked = false; // check this if we fuck up
 		marked = false; 
+		threadID = -1;
+		key = _key;
+		topLayer = _height;
+		nexts = new SharedNode*[_height + 1];
+	}
+
+	SharedNode(int _key, int _height, int _threadID) {
+		fullyLinked = false; // check this if we fuck up
+		marked = false; 
+		threadID = _threadID;
 		key = _key;
 		topLayer = _height;
 		nexts = new SharedNode*[_height + 1];
 	}
 };
 
-
-class SharedSkipList 
-{
+class SharedSkipList {
 public:
 
 	SharedNode *LSentinel;
@@ -50,11 +60,12 @@ public:
 
     //Function prototypes;
     int findNode(int v, SharedNode* preds [], SharedNode* succs []);
-    bool add(int v); 
+    bool add(int v, int threadID); 
  	bool remove(int v);
     bool okToDelete(SharedNode* candidate, int lFound); 
  	bool contains(int v); 
 	void print(); 
+	bool isEmpty();
 };
 
 #endif /* _LOCK_FREE_SKIPLIST */

@@ -326,15 +326,15 @@ int SkipList::delete_k_min(Node* head, int k) {
 
 }
 
-void SkipList::print(int mode) {
+void SkipList::print(int mode, string fileName) {
 
     ofstream myfile;
 
     if(mode == 0) {
-    	myfile.open("outputCPP.txt");
+    	myfile.open(fileName);
     }
     else if(mode == 1) {
-    	myfile.open("outputCPP.txt", ios_base::app);
+    	myfile.open(fileName, ios_base::app);
     }
 
     int curr_level = head->height;
@@ -356,6 +356,9 @@ void SkipList::print(int mode) {
 
    	cout << "----" << endl;
    	cout << "height: " << this->getHeight() << endl;
+
+   	cout << "----" << endl;
+   	cout << "thread ID: " << this->threadID << endl;
    	
     myfile.close();
 }
@@ -363,6 +366,3 @@ void SkipList::print(int mode) {
 void SkipList::printHeight() {
 	cout << "height: " << this->getHeight() << endl;
 }
-
-
-// }

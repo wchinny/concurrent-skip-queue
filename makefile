@@ -23,6 +23,7 @@ OBJ = $(SRC:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
 
 CPPFLAGS += -Iinclude
 CPPFLAGS += -O
+CPPFLAGS += -g
 CFLAGS += -Wall
 LDLIBS += -lm
 

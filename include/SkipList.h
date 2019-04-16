@@ -10,6 +10,7 @@ public:
 	int priority;
 	int value;
 	int height;
+	int threadID;
 	bool marked;
 
 	vector<Node*> nextPointers;
@@ -59,19 +60,22 @@ public:
 	int size; 
 	vector<Node*> k_priorities;
 	int k;
+	int threadID;
 
 	SkipList(void) {
 		this->head = new Node(1);
 		this->height = 1;
 		this->size = 0;
 		this->k = 2; //This is just the default!
+		this->threadID = 0;
 	}
 
-	SkipList(int p, int t) {
+	SkipList(int p, int t, int _threadID) {
 		k = (int)ceil(double(p) / t);
 		this->head = new Node(1);
 		this->height = 1;
 		this->size = 0;
+		this->threadID = _threadID;
 	}
 
 	int getSize();
@@ -87,7 +91,7 @@ public:
 	int delete_k_min(Node* head, int k);
 	bool contains(int data);
 	Node* get(int data);
-	void print(int mode);
+	void print(int mode, string fileName);
     void printHeight();
 };
 

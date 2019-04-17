@@ -42,11 +42,13 @@ public:
 	SharedNode *LSentinel;
 	SharedNode *RSentinel;
 
+	int pRelaxation;
+
 	int MaxHeight; // current max height
 
-	SharedSkipList(int _MaxHeight) 
-	{
-		cout << "In the skiplist constructor" << endl;
+	SharedSkipList(int _MaxHeight, int _pRelaxation) 
+	{	
+		pRelaxation = _pRelaxation;
 		MaxHeight = _MaxHeight;
 		LSentinel = new SharedNode(INT_MIN + 1, _MaxHeight);
 		RSentinel = new SharedNode(INT_MAX - 1, _MaxHeight);
@@ -64,8 +66,9 @@ public:
  	bool remove(int v);
     bool okToDelete(SharedNode* candidate, int lFound); 
  	bool contains(int v); 
-	void print(); 
+	void print(string fileName); 
 	bool isEmpty();
+	int minTraverse(int k, int threadID);
 };
 
 #endif /* _LOCK_FREE_SKIPLIST */

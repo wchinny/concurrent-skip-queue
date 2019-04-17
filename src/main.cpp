@@ -21,7 +21,7 @@ int main() {
 	// }
 
 
-	DLSM *test = new DLSM(4, 4);
+	DLSM *test = new DLSM(4, 64);
 
 	vector<thread> threads;
 
@@ -33,15 +33,28 @@ int main() {
 		t.join();
 	}
 
+	(test->shared)->print("before.txt");
+
 	vector<thread> threads2;
 
-	for(int i = 0; i < 4; i++) {
-		threads2.emplace_back(&DLSM::ops, test, i, 1);
-	}
+	thread t2(&DLSM::ops, test, 2, 1);
+	thread t3(&DLSM::ops, test, 3, 1);
 
-	for(auto &t : threads2) {
-		t.join();
-	}
+	t2.join();
+	t3.join();
+
+	(test->shared)->print("after.txt");
+
+
+	// for(int i = 0; i < 4; i++) {
+	// 	threads2.emplace_back(&DLSM::ops, test, i, 1);
+	// }
+
+	// for(auto &t : threads2) {
+	// 	t.join();
+	// }
+
+
 
 	// for(int i = 0; i < 1000000; i++) {
 	// 	(test->shared)->remove((int)rand() % 10000 + 1);
@@ -52,5 +65,4 @@ int main() {
 	(test->skip_array[2])->print(0, "output_test2.txt");
 	(test->skip_array[3])->print(0, "output_test3.txt");
 
-	(test->shared)->print();
 }

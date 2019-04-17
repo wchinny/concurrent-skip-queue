@@ -181,11 +181,11 @@ bool SharedSkipList::contains(int v) {
 	return(lFound != -1 && succs[lFound]->fullyLinked && !succs[lFound]->marked);
 }
 
-void SharedSkipList::print() {
+void SharedSkipList::print(string fileName) {
 
     ofstream myfile;
     
-    myfile.open("outputLockFreeSkipList.txt");
+    myfile.open(fileName);
 
     int curr_level = LSentinel->topLayer;
 
@@ -218,34 +218,26 @@ bool SharedSkipList::isEmpty() {
 	return false;
 }
 
-// void batch_add(SkipList* s)
-// {
+int SharedSkipList::minTraverse(int k, int threadID) {
 
-// 	for(int i = 0; i < 10000; i++)
-// 	{
-// 		s->add(i);
-// 	}
-// }
+	SharedNode* temp = LSentinel->nexts[0];
 
-// int main() 
-// {
-// 	SkipList* s = new SkipList(20);
+	int retVal;
 
-// 	vector<thread> v;
-// 	int c = 0;
+	for(int i = 0; i < k + 1; i++) {
 
-// 	for(int i = 1; i < 4; i++)
-// 	{
-// 		v.emplace_back(thread(batch_add, s));
-// 	}
+		if(temp == NULL) {
+			return retVal;
+		}
 
-// 	for(auto &t : v)
-// 	{
-// 		t.join();
-// 	}
+		retVal = temp->key;
 
-// 	s->print();
+		if(temp->threadID == threadID) {
+			return retVal;
+		}
 
-// 	return 0;
+		temp = temp->nexts[0];
+	}
 
-// }
+	return retVal;
+}

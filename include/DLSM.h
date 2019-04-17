@@ -19,7 +19,7 @@ public:
 	DLSM(int numThreads, int pRelaxation) {
 		num_threads = numThreads;
 		skip_array = new SkipList*[numThreads];
-		shared = new SharedSkipList(20);
+		shared = new SharedSkipList(10, pRelaxation);
 
 		for(int i = 0; i < numThreads; i++) {
 			skip_array[i] = new SkipList(pRelaxation, numThreads, i);

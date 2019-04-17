@@ -1,5 +1,8 @@
 #include "DLSM.h"
 
+#define NUM_THREADS 4
+#define NUM_INSERTS 500
+
 using namespace std;
 
 void DLSM::test_remove() {
@@ -10,17 +13,24 @@ void DLSM::test_remove() {
 
 void DLSM::ops(int idx, int flag) {
 
+	int k = (ceil(shared->pRelaxation / NUM_THREADS));
+
+	printf("K: %d\n", k);
+
+	int min_val;
+
 	if(flag == 0) {
 		// add only
-		for(int i = 0; i < 8000; i++) {
-			this->skip_array[idx]->insert((int)(rand() % 10000 + 1), (int)(rand() % 10000 + 1));
+		for(int i = 0; i < NUM_INSERTS / NUM_THREADS; i++) {
+			this->skip_array[idx]->insert((int)(rand() % 1000000 + 1), (int)(rand() % 1000000 + 1));
 		}
-	}
-
-	else if(flag == 1) {
-		for(int i = 0; i < 10000; i++) {
+	} else if(flag == 1) {
+		for(int i = 0; i < 1; i++) {
 			if(shared->isEmpty()) {
 				this->skip_array[idx]->delete_min();
+			} else {
+				min_val = shared->minTraverse(k, idx);
+				shared->remove(min_val);
 			}
 		}
 	}
@@ -43,11 +53,11 @@ void DLSM::ops(int idx, int flag) {
 
 	//SHAVIT LIST
 
-	cout << this->skip_array[idx]->getHeight() << endl;
+	// cout << this->skip_array[idx]->getHeight() << endl;
 
 	Node *deletedNode;
 
-	if(skip_array[idx]->getHeight() >= log2(10000)) {
+	if(skip_array[idx]->getHeight() >= log2(NUM_INSERTS / NUM_THREADS)) {
 
 		while(true) {
 
@@ -55,7 +65,7 @@ void DLSM::ops(int idx, int flag) {
 
 			shared->add(deletedNode->value, idx);
 
-			if(skip_array[idx]->height <= log2(10000) - 3){
+			if(skip_array[idx]->height <= log2(NUM_INSERTS / NUM_THREADS) - 3){
 				break;
 			}
 		}

@@ -1,42 +1,18 @@
-# example makefile
-#
-# Notes:
-# - the indents must be tabs
-# - if you need to specify a non-standard compiler, then set CXX
-#   (it defaults to g++)
-# - if you need to pass flags to the linker, set LDFLAGS rather
-#   than alter the ${TARGET}: ${OBJECTS} rule
-# - to see make's built-in rules use make -p
+# Note: 
+# g++-8 is used here to specify the g++/gcc version used in our development computer. 
+# change that as necessary.
 
-# target executable name
-EXE = klsm
+.PHONY: concurrent stm clean
 
-CXX := /usr/local/bin/g++-8
+stm:
+	g++-8 ./transactional/main.cpp -fgnu-tm -o klsm
 
-# source files
-
-SRC_DIR = src
-OBJ_DIR = obj
-
-SRC = $(wildcard $(SRC_DIR)/*.cpp)
-OBJ = $(SRC:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
-
-CPPFLAGS += -Iinclude
-# CPPFLAGS += -O
-CPPFLAGS += -g
-CFLAGS += -Wall
-LDLIBS += -lm
-
-.PHONY: all clean
-
-all: $(EXE)
-
-$(EXE): $(OBJ)
-	$(CXX) $(LDFLAGS) $^ $(LDLIBS) -o $@
-
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
-	$(CXX) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+concurrent:
+	g++-8 ./concurrent/main.cpp -o klsm
 
 clean:
-	$(RM) $(OBJ)
+	rm -f klsm *.txt
+
+
+
 

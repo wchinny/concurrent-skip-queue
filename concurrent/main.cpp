@@ -9,7 +9,7 @@ int main(int argc, char **argv) {
     int num_threads = atoi(argv[1]);
     int num_inserts = atoi(argv[2]);
 
-    DLSM *test = new DLSM(num_threads, num_inserts, 64);
+    DLSM *test = new DLSM(num_threads, num_inserts, 4);
 
     vector<thread> threads;
 
@@ -33,7 +33,6 @@ int main(int argc, char **argv) {
         for(auto &t2 : threads2) {
             t2.join();
         }
-
     }
 
     (test->shared)->print("after.txt");

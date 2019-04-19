@@ -1,14 +1,18 @@
 #include "DLSM.h"
+#include <cstdlib>
 
-int main() {
+int main(int argc, char **argv) {
 
     srand(time(0));
 
-    DLSM *test = new DLSM(4, 64);
+    int num_threads = atoi(argv[1]);
+    int num_inserts = atoi(argv[2]);
+
+    DLSM *test = new DLSM(num_threads, num_inserts, 64);
 
     vector<thread> threads;
 
-    for(int i = 0; i < 4; i++) {
+    for(int i = 0; i < num_threads; i++) {
         threads.emplace_back(&DLSM::ops, test, i, 0);
     }
 
@@ -28,9 +32,9 @@ int main() {
 
     (test->shared)->print("after.txt");
 
-    (test->skip_array[0])->print(0, "output_test.txt");
-    (test->skip_array[1])->print(0, "output_test1.txt");
-    (test->skip_array[2])->print(0, "output_test2.txt");
-    (test->skip_array[3])->print(0, "output_test3.txt");
+    // (test->skip_array[0])->print(0, "output_test.txt");
+    // (test->skip_array[1])->print(0, "output_test1.txt");
+    // (test->skip_array[2])->print(0, "output_test2.txt");
+    // (test->skip_array[3])->print(0, "output_test3.txt");
 
 }

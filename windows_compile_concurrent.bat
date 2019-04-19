@@ -1,1 +1,1 @@
-g++ ./transactional/main.cpp -fgnu-tm -pthread -o klsm
+g++ ./concurrent/main.cpp -pthread -o klsm

@@ -1,37 +1,40 @@
 #include "DLSM.h"
-#include <thread>
-#include <vector>
-int main() {
+#include <cstdlib>
 
-	srand(time(0));
+int main(int argc, char **argv) {
 
-	DLSM *test = new DLSM(4, 64);
+    srand(time(0));
 
-	vector<thread> threads;
+    int num_threads = atoi(argv[1]);
+    int num_inserts = atoi(argv[2]);
 
-	for(int i = 0; i < 4; i++) {
-		threads.emplace_back(&DLSM::ops, test, i, 0);
-	}
+    DLSM *test = new DLSM(num_threads, num_inserts, 64);
 
-	for(auto &t : threads) {
-		t.join();
-	}
+    vector<thread> threads;
 
-	(test->shared)->print("before.txt");
+    for(int i = 0; i < num_threads; i++) {
+        threads.emplace_back(&DLSM::ops, test, i, 0);
+    }
 
-	vector<thread> threads2;
+    for(auto &t : threads) {
+        t.join();
+    }
 
-	thread t2(&DLSM::ops, test, 2, 1);
-	thread t3(&DLSM::ops, test, 3, 1);
+    (test->shared)->print("before.txt");
 
-	t2.join();
-	t3.join();
+    // vector<thread> threads2;
 
-	(test->shared)->print("after.txt");
+    // thread t2(&DLSM::ops, test, 2, 1);
+    // thread t3(&DLSM::ops, test, 3, 1);
 
-	(test->skip_array[0])->print(0, "output_test.txt");
-	(test->skip_array[1])->print(0, "output_test1.txt");
-	(test->skip_array[2])->print(0, "output_test2.txt");
-	(test->skip_array[3])->print(0, "output_test3.txt");
+    // t2.join();
+    // t3.join();
+
+    (test->shared)->print("after.txt");
+
+    // (test->skip_array[0])->print(0, "output_test.txt");
+    // (test->skip_array[1])->print(0, "output_test1.txt");
+    // (test->skip_array[2])->print(0, "output_test2.txt");
+    // (test->skip_array[3])->print(0, "output_test3.txt");
 
 }

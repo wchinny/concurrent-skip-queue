@@ -8,9 +8,6 @@
 #include <thread>
 #include <cmath>
 
-#define NUM_THREADS 4
-#define NUM_INSERTS 100000
-
 using namespace std;
 
 int randomLevel(int _maxHeight) {

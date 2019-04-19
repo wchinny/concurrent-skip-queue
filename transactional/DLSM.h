@@ -10,11 +10,13 @@ public:
     SharedSkipList *shared;
 
     int num_threads;
+    int num_inserts;
 
-    DLSM(int numThreads, int pRelaxation) {
+    DLSM(int numThreads, int numInserts, int pRelaxation) {
         num_threads = numThreads;
+        num_inserts = numInserts;
         skip_array = new SkipList*[numThreads];
-        shared = new SharedSkipList(20, pRelaxation);
+        shared = new SharedSkipList(25, pRelaxation);
 
         for(int i = 0; i < numThreads; i++) {
             skip_array[i] = new SkipList(pRelaxation, numThreads, i);
@@ -29,14 +31,14 @@ public:
 
     void ops(int idx, int flag) {
 
-        int k = (ceil(shared->pRelaxation / NUM_THREADS));
+        int k = (ceil(shared->pRelaxation / num_threads));
 
-        printf("K: %d\n", k);
+        // printf("K: %d\n", k);
 
         int min_val;
 
         if(flag == 0) {
-            for(int i = 0; i < NUM_INSERTS / NUM_THREADS; i++) {
+            for(int i = 0; i < num_inserts / num_threads; i++) {
                 this->skip_array[idx]->insert(i, i + 1);
             }
         } else if(flag == 1) {
@@ -52,7 +54,7 @@ public:
 
         Node *deletedNode;
 
-        if(skip_array[idx]->getHeight() >= log2(NUM_INSERTS / NUM_THREADS)) {
+        if(skip_array[idx]->getHeight() >= log2(num_inserts / num_threads)) {
 
             while(true) {
 
@@ -60,7 +62,7 @@ public:
 
                 shared->add(deletedNode->value, idx);
 
-                if(skip_array[idx]->height <= log2(NUM_INSERTS / NUM_THREADS) - 3) {
+                if(skip_array[idx]->height <= log2(num_inserts / num_threads) - 3) {
                     break;
                 }
             }

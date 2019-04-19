@@ -33,8 +33,6 @@ public:
 
         int k = (ceil(shared->pRelaxation / num_threads));
 
-        // printf("K: %d\n", k);
-
         int min_val;
 
         if(flag == 0) {
@@ -42,7 +40,7 @@ public:
                 this->skip_array[idx]->insert(i, i + 1);
             }
         } else if(flag == 1) {
-            for(int i = 0; i < 1; i++) {
+            for(int i = 0; i < num_inserts / num_threads; i++) {
                 if(shared->isEmpty()) {
                     this->skip_array[idx]->delete_min();
                 } else {
@@ -70,4 +68,4 @@ public:
     }
 };
 
-#endif /* _DLSM */
+#endif /* _DLSM_ */

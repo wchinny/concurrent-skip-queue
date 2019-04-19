@@ -1,9 +1,10 @@
 #include "DLSM.h"
 #include <cstdlib>
+#include <cstring>
 
 int main(int argc, char **argv) {
 
-    srand(time(0));
+    srand(42); // constant seed for testing
 
     int num_threads = atoi(argv[1]);
     int num_inserts = atoi(argv[2]);
@@ -22,19 +23,18 @@ int main(int argc, char **argv) {
 
     (test->shared)->print("before.txt");
 
-    // vector<thread> threads2;
+    if(argc == 4 && strcmp(argv[3], "-rm") == 0) {
+        vector<thread> threads2;
 
-    // thread t2(&DLSM::ops, test, 2, 1);
-    // thread t3(&DLSM::ops, test, 3, 1);
+        for(int i = 1; i < num_threads; i++) {
+            threads2.emplace_back(&DLSM::ops, test, i, 1);
+        }
 
-    // t2.join();
-    // t3.join();
+        for(auto &t2 : threads2) {
+            t2.join();
+        }
+
+    }
 
     (test->shared)->print("after.txt");
-
-    // (test->skip_array[0])->print(0, "output_test.txt");
-    // (test->skip_array[1])->print(0, "output_test1.txt");
-    // (test->skip_array[2])->print(0, "output_test2.txt");
-    // (test->skip_array[3])->print(0, "output_test3.txt");
-
 }

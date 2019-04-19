@@ -150,23 +150,26 @@ public:
         while(true) {
             int lFound = findNode(v, preds, succs);
 
-            if(isMarked || (lFound != -1 && okToDelete(succs[lFound], lFound))) {
-                if(!isMarked) {
-                    nodeToDelete = succs[lFound];
-                    topLayer = nodeToDelete->topLayer;
+            __transaction_atomic {
 
-                    if(nodeToDelete->marked) {
-                        return false;
+
+
+                if(isMarked || (lFound != -1 && okToDelete(succs[lFound], lFound))) {
+                    if(!isMarked) {
+                        nodeToDelete = succs[lFound];
+                        topLayer = nodeToDelete->topLayer;
+
+                        if(nodeToDelete->marked) {
+                            return false;
+                        }
+
+                        nodeToDelete->marked = true;
+                        isMarked = true;
                     }
 
-                    nodeToDelete->marked = true;
-                    isMarked = true;
-                }
+                    SharedNode *pred, *succ, *prevPred = NULL;
+                    bool valid = true;
 
-                SharedNode *pred, *succ, *prevPred = NULL;
-                bool valid = true;
-
-                __transaction_atomic {
 
                     for(int layer = 0; valid && (layer <= topLayer); layer++) {
                         pred = preds[layer];
@@ -187,11 +190,11 @@ public:
                         preds[layer]->nexts[layer] = nodeToDelete->nexts[layer];
 
                     return true;
+
                 }
 
+                else return false;
             }
-
-            else return false;
         }
     }
 

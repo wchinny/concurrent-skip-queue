@@ -6,56 +6,60 @@ Here are the contents of the root folder:
 
 ```
 .
-├── MidtermReport.pdf
 ├── README.md
-├── README.pdf
-├── a.out
-├── compile.bat
-├── example
-├── include
-│   ├── BTree.h
-│   ├── BTree.h.gch
-│   ├── LSM.h
-│   ├── SkipList.h
-│   └── SkipList.h.gch
-├── irrelevant
-│   └── klsm.cpp
-├── klsm
-├── makefile
-├── obj
-│   ├── BTree.o
-│   ├── LSM.o
-│   ├── SkipList.o
-│   └── main.o
-├── outputCPP.txt
-├── src
+├── bench-data
+│   ├── concurrent_version
+│   └── transactional_version
+├── bench.py
+├── concurrent
 │   ├── BTree.cpp
-│   ├── LSM.cpp
-│   ├── SkipList.cpp
+│   ├── BTree.h
+│   ├── DLSM.h
+│   ├── LockFreeSkiplist.h
+│   ├── SkipList.h
 │   └── main.cpp
-└── testing
-    └── skiplist-testing.cpp
+├── documents
+├── makefile [recommended]
+├── transactional
+│   ├── DLSM.h
+│   ├── SharedSkipList.h
+│   ├── SkipList.h
+│   ├── a.out
+│   ├── main.cpp
+│   └── main.o
+├── windows_compile_concurrent.bat [not guaranteed, this project is recommended to be run on Linux/ MacOS]
+└── windows_compile_stm.bat [not guaranteed, this project is recommended to be run on Linux/ MacOS]
 
 ```
+`README.md` -> This file
+`bench-data` -> Folder containing benchmark graphs, for both concurrent and transactional versions
+`bench.py` -> Benchmark tool. Usage is detailed in the `.py` file as comments
+`concurrent` -> Contains the source code for the concurrent version of this algorithm
+`documents` -> Related documents
+`makefile` -> Makefile
+`transactional` -> Contains the source code for the software transactional memory (STM) version of this algorithm
+`windows_compile_concurrent.bat` -> Compiling script for the conccurent version for windows machines (where `make` is not available)
+`windows_compile_stm.bat` -> Compiling script for the STM version for windows machines (where `make` is not available)
 
-### Compiling and running the program 
+### Compiling the program (Linux/MacOS)
 
 To compile, run `make` as shown here:
 ```bash
-$ make
+$ make concurrent # build the concurrent version --or--
+$ make transactional_version # build the transactional (STM) version
 ```
-*This has been tested on gcc 8.2.0 on MacOS 10.14.2 and Ubuntu 18.04
 
-### Testing
+The executable will be name `klsm`, which will be in the root folder. 
 
-Tests are included in `skiplist-testing.cpp`. A better-structured and separate unit testing is in progress.
+### Running the executable
 
-Compile the file as usual like so, and run the executable. Tests are included in the file mentioned above.
-
+`klsm` takes two command-line arguments-- first one being the number of threads, and the second one being the number of operations
 ```bash
-$ g++-8 tester skiplist-testing.cpp
+$ ./klsm 4 100000
+
 ```
-*This has been tested on gcc 8.2.0 on MacOS 10.14.2 and Ubuntu 18.04
+
+
 
 
 

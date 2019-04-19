@@ -23,26 +23,18 @@ public:
         }
     }
 
-    void test_remove() {
-        for(int i = 0; i < 100000; i++) {
-            shared->remove((int)(rand() % 10000 + 1));
-        }
-    }
-
     void ops(int idx, int flag) {
 
         int k = (ceil(shared->pRelaxation / num_threads));
-
-        // printf("K: %d\n", k);
 
         int min_val;
 
         if(flag == 0) {
             for(int i = 0; i < num_inserts / num_threads; i++) {
-                this->skip_array[idx]->insert(i, i + 1);
+                this->skip_array[idx]->insert((int)(rand() % 1000000), i + 1);
             }
         } else if(flag == 1) {
-            for(int i = 0; i < 1; i++) {
+            for(int i = 0; i < num_inserts / num_threads; i++) {
                 if(shared->isEmpty()) {
                     this->skip_array[idx]->delete_min();
                 } else {

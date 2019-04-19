@@ -32,13 +32,21 @@ Here are the contents of the root folder:
 
 ```
 `README.md` -> This file
+
 `bench-data` -> Folder containing benchmark graphs, for both concurrent and transactional versions
+
 `bench.py` -> Benchmark tool. Usage is detailed in the `.py` file as comments
+
 `concurrent` -> Contains the source code for the concurrent version of this algorithm
+
 `documents` -> Related documents
+
 `makefile` -> Makefile
+
 `transactional` -> Contains the source code for the software transactional memory (STM) version of this algorithm
+
 `windows_compile_concurrent.bat` -> Compiling script for the conccurent version for windows machines (where `make` is not available)
+
 `windows_compile_stm.bat` -> Compiling script for the STM version for windows machines (where `make` is not available)
 
 ### Compiling the program (Linux/MacOS)
